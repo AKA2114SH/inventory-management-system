@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-300 text-gray-200 font-mono;
+  }
+}
+
+@layer components {
+  .card-glow {
+    @apply border border-neon-cyan/20 bg-dark-200/50 backdrop-blur-sm rounded-lg;
+  }
+  
+  .input-neon {
+    @apply bg-dark-100 border border-neon-cyan/30 rounded-lg px-4 py-2 focus:outline-none focus:border-neon-cyan focus:shadow-lg focus:shadow-neon-cyan/20 transition-all text-gray-200;
+  }
+  
+  .btn-primary {
+    @apply bg-neon-cyan/20 hover:bg-neon-cyan/30 text-neon-cyan border border-neon-cyan rounded-lg px-6 py-2 transition-all hover:shadow-lg hover:shadow-neon-cyan/30 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-100 hover:bg-dark-200 text-gray-300 border border-gray-600 rounded-lg px-6 py-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-danger {
+    @apply bg-neon-red/20 hover:bg-neon-red/30 text-neon-red border border-neon-red rounded-lg px-6 py-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .badge-success {
+    @apply bg-neon-green/20 text-neon-green border border-neon-green/50 rounded-full px-3 py-1 text-xs;
+  }
+  
+  .badge-warning {
+    @apply bg-neon-yellow/20 text-neon-yellow border border-neon-yellow/50 rounded-full px-3 py-1 text-xs;
+  }
+  
+  .badge-danger {
+    @apply bg-neon-red/20 text-neon-red border border-neon-red/50 rounded-full px-3 py-1 text-xs;
+  }
+}

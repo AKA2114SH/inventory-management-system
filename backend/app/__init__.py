@@ -1,0 +1,1 @@
+"""Inventory Billing System - Backend Application"""
