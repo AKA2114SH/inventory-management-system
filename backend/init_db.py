@@ -5,8 +5,18 @@ import time
 import sys
 import os
 
-# Use sync URL for initialization (psycopg2 instead of asyncpg)
-DATABASE_URL = "postgresql://postgres:password@localhost:5433/inventory_db"
+# 1. Get the URL from Render's environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    print("❌ ERROR: DATABASE_URL environment variable is not set.")
+    sys.exit(1)
+
+# 2. Ensure the sync driver (psycopg2) is explicitly used, and remove asyncpg
+if DATABASE_URL.startswith("postgresql+asyncpg://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://", 1)
+elif not DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 print("=" * 50)
 print("Database Initialization Script")
@@ -19,25 +29,20 @@ engine = None
 
 while retry_count < max_retries:
     try:
+        # Use the dynamic DATABASE_URL here
         engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         print("   ✅ Database connection successful!")
         break
-    except OperationalError as e:
+    except Exception as e:
         retry_count += 1
         error_msg = str(e)
-        if "Connection refused" in error_msg:
-            print(f"   Attempt {retry_count}/{max_retries}: Database not ready yet...")
-        else:
-            print(f"   Attempt {retry_count}/{max_retries} failed: {error_msg[:100]}")
+        print(f"   Attempt {retry_count}/{max_retries} failed: {error_msg[:100]}")
         time.sleep(2)
         if retry_count == max_retries:
             print("\n   ❌ Could not connect to database.")
-            print("   Please check:")
-            print("   1. Docker container is running: docker ps")
-            print("   2. Port 5433 is not blocked")
-            print("   3. PostgreSQL is healthy")
+            print("   Please check your DATABASE_URL environment variable in Render.")
             sys.exit(1)
 
 print("\n2. Creating database tables...")
